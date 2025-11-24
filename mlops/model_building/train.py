@@ -70,7 +70,7 @@ with mlflow.start_run():
     # Hyperparameter tuning
     precision_scorer = make_scorer(precision_score)
     random_search = RandomizedSearchCV(pipeline, param_grid,scoring=precision_scorer,cv=5, n_jobs=-1)
-    random_search.fit(X_train, y_train)
+    random_search.fit(Xtrain, ytrain)
 
     # Log all parameter combinations and their mean test scores
     results = random_search.cv_results_
@@ -91,12 +91,12 @@ with mlflow.start_run():
 
     # Store and evaluate the best model
     best_model = random_search.best_estimator_
-    best_model.fit(X_train,y_train)
-    y_pred_train = best_model.predict_proba(X_train)[:,1]>0.60
-    y_pred_test = best_model.predict_proba(X_test)[:,1]>0.60
+    best_model.fit(Xtrain,ytrain)
+    y_pred_train = best_model.predict_proba(Xtrain)[:,1]>0.60
+    y_pred_test = best_model.predict_proba(Xtest)[:,1]>0.60
 
-    train_report = classification_report(y_train, y_pred_train, output_dict=True)
-    test_report = classification_report(y_test, y_pred_test, output_dict=True)
+    train_report = classification_report(ytrain, y_pred_train, output_dict=True)
+    test_report = classification_report(ytest, y_pred_test, output_dict=True)
 
     print(train_report)
     print(test_report)
