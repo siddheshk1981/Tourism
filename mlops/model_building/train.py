@@ -50,20 +50,19 @@ preprocessor=make_column_transformer((Winsorizer(capping_method='quantiles',fold
                                         )
 smote=SMOTE(sampling_strategy=0.75,k_neighbors=5,random_state=1)
 
-xgb_model=XGBClassifier(random_state=42)
+gb_model=GradientBoostingClassifier(random_state=42)
 
-pipeline=make_pipeline(preprocessor,smote,xgb_model)
+pipeline=make_pipeline(preprocessor,smote,gb_model)
 
 param_grid={
-    'xgbclassifier__n_estimators':[10,30,50],
-    'xgbclassifier__max_depth':[2,7,15],
-    'xgbclassifier__subsample':[0.5,0.7,0.9],
-    'xgbclassifier__learning_rate':[0.001,0.01,0.1],
-    'xgbclassifier__reg_alpha':[0.3,0.5,0.7],
-    'xgbclassifier__reg_lambda':[0.3,0.5,0.7],
-    'xgbclassifier__gamma':[0.4,0.6,0.8],
-    'xgbclassifier__colsample_bytree':[0.3,0.5,0.7],
-    'xgbclassifier__colsample_bylevel':[0.3,0.5,0.7],
+    'gradientboostingclassifier__n_estimators':[100,300,500],
+    'gradientboostingclassifier__max_depth':[2,7,5],
+    'gradientboostingclassifier__learning_rate':[0.0001,0.001,0.01,0.1],
+    'gradientboostingclassifier__subsample':[0.5,0.7,0.9],
+    'gradientboostingclassifier__max_features':[0.6,0.8,0.9],
+    'gradientboostingclassifier__min_samples_split':[4,12,20],
+    'gradientboostingclassifier__min_samples_leaf':[2,6,10],
+    'gradientboostingclassifier__tol':[0.0001,0.001,0.01]
 }
 
 with mlflow.start_run():
@@ -113,7 +112,7 @@ with mlflow.start_run():
     })
 
      # Save the model locally
-    model_path = "best_tourism_package_predict_model_v1.joblib"
+    model_path = "gb_tourism_package_predict_model_v1.joblib"
     joblib.dump(best_model, model_path)
 
     # Log the model artifact
@@ -135,8 +134,8 @@ with mlflow.start_run():
 
     # create_repo("churn-model", repo_type="model", private=False)
     api.upload_file(
-        path_or_fileobj="best_tourism_package_predict_model_v1.joblib",
-        path_in_repo="best_tourism_package_predict_model_v1.joblib",
+        path_or_fileobj="gb_tourism_package_predict_model_v1.joblib",
+        path_in_repo="gb_tourism_package_predict_model_v1.joblib",
         repo_id=repo_id,
         repo_type=repo_type,
     )
