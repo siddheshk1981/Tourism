@@ -1,7 +1,5 @@
 import pandas as pd
 import sklearn
-import seaborn as sns
-import matplotlib.pyplot as plt
 from imblearn.pipeline import Pipeline,make_pipeline
 from imblearn.over_sampling import SMOTE
 from feature_engine.outliers import Winsorizer
